@@ -77,6 +77,9 @@ const getAllProducts = async (req, res) => {
       category_name: p.category_name,
       stockQuantity: p.stockQuantity,
       description: p.description,
+      modelNo: p.modelNo,
+      code: p.code,
+      material: p.material, 
       image: p.image ? JSON.parse(p.image) : []
     }));
 
@@ -106,6 +109,9 @@ const getAllInventoryProducts = async (req, res) => {
       category_name: p.category_name,
       stockQuantity: p.stockQuantity,
       description: p.description,
+      modelNo: p.modelNo,
+      code: p.code,
+      material: p.material,  
       image: p.image ? JSON.parse(p.image) : []
     }));
 
@@ -169,8 +175,8 @@ const updateProduct = async (req, res) => {
 
     // Update product
     await db.query(
-      `UPDATE product SET name=?, price=?, sku=?, categoryId=?, stockQuantity=?, description=?, modelNo = ?, code = ?, material = ?  image=? WHERE id=?`,
-      [name, price, sku, categoryId, stockQuantity, description,modelNo, code, material, JSON.stringify(images), id]
+      `UPDATE product SET name=?, price=?, sku=?, categoryId=?, stockQuantity=?, description=?, modelNo = ?, code = ?, material = ?, image=? WHERE id=?`,
+      [name, price, sku, categoryId, stockQuantity, description, modelNo, code, material, JSON.stringify(images), id]
     );
 
     const [rows] = await db.query(`SELECT * FROM product WHERE id = ?`, [id]);
