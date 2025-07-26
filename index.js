@@ -95,7 +95,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/dashboardOverview', dashboardOverviewRoutes);
 app.use('/api/productQuantity', productQuantityRoutes);
-]
+
 
 
 
