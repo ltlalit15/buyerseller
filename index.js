@@ -15,6 +15,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const productRoutes = require('./routes/productRoutes');
 const dashboardOverviewRoutes = require('./routes/dashboardOverviewRoutes');
 const productQuantityRoutes = require('./routes/productQuantityRoutes');
+const planRoutes = require('./routes/planRoutes');
 
 
 
@@ -95,6 +96,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/dashboardOverview', dashboardOverviewRoutes);
 app.use('/api/productQuantity', productQuantityRoutes);
+app.use('/api/plan', planRoutes);
 
 
 
