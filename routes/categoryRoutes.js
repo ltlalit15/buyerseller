@@ -21,7 +21,7 @@ const router = express.Router();
 
 router.post('/createCategory', createCategory);
 router.get('/getAllCategories', getAllCategories);
-router.patch('/updateCategory/:id', authMiddleware, updateCategory);
+router.patch('/updateCategory/:id', updateCategory);
 router.delete('/deleteCategory/:id', authMiddleware, deleteCategory);
 
 
