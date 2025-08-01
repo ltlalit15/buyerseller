@@ -19,11 +19,10 @@ cloudinary.config({
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    let imageUrl = []; // default if no image
+    let imageUrl = null; // default
 
-   
-    // ✅ If image is selected, upload to Cloudinary
-    if (req.files && req.files.image) {
+    // ✅ Upload image if provided
+    if (req.files?.image) {
       const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         folder: 'categories',
         resource_type: 'image'
@@ -31,29 +30,33 @@ const createCategory = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
-    // ✅ Save to DB (can be null if no image)
-    const [result] = await db.query('INSERT INTO category (name, image) VALUES (?, ?)', [name, imageUrl]);
+    // ✅ Insert into DB (image can be null)
+    const [result] = await db.query(
+      'INSERT INTO category (name, image) VALUES (?, ?)',
+      [name, imageUrl]
+    );
     const insertedId = result.insertId;
 
     res.status(201).json({
-      status: "true",
+      status: true,
       message: "Category added successfully",
       data: {
         id: insertedId,
         name,
-        image: imageUrl ? [imageUrl] : [] // always return array
+        image: imageUrl ? [imageUrl] : [] // always return as array
       }
     });
 
   } catch (error) {
     console.error("❌ Error while adding category:", error);
     res.status(500).json({
-      status: "false",
+      status: false,
       message: "Server error while adding category",
       data: []
     });
   }
 };
+
 
 
 const getAllCategories = async (req, res) => {
@@ -87,8 +90,6 @@ const getAllCategories = async (req, res) => {
     });
   }
 };
-
-
 
 
 const updateCategory = async (req, res) => {
