@@ -97,9 +97,15 @@ const updateCategory = async (req, res) => {
     const { name } = req.body;
     const { id } = req.params;
 
-    let imageUrl = [];
+    let imageUrl = null;
 
-    // Upload new image if provided
+    // ✅ Get existing category
+    const [existing] = await db.query('SELECT * FROM category WHERE id = ?', [id]);
+    if (existing.length === 0) {
+      return res.status(404).json({ status: "false", message: "Category not found" });
+    }
+
+    // ✅ Upload new image if provided
     if (req.files && req.files.image) {
       const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         folder: 'categories',
@@ -108,18 +114,13 @@ const updateCategory = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
-    // ✅ Get old data
-    const [existing] = await db.query('SELECT * FROM category WHERE id = ?', [id]);
-    if (existing.length === 0) {
-      return res.status(404).json({ status: "false", message: "Category not found" });
-    }
-
-    // ✅ Use old image if no new image uploaded
+    // ✅ Final name and image (fallback to existing if not provided)
+    const finalName = name || existing[0].name;
     const finalImage = imageUrl || existing[0].image;
 
     await db.query(
       'UPDATE category SET name = ?, image = ? WHERE id = ?',
-      [name || existing[0].name, finalImage, id]
+      [finalName, finalImage, id]
     );
 
     res.json({
@@ -127,7 +128,7 @@ const updateCategory = async (req, res) => {
       message: "Category updated successfully",
       data: {
         id,
-        name: name || existing[0].name,
+        name: finalName,
         image: finalImage ? [finalImage] : []
       }
     });
@@ -140,6 +141,7 @@ const updateCategory = async (req, res) => {
     });
   }
 };
+
 
 
 
