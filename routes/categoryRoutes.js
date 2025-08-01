@@ -19,9 +19,9 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 
-router.post('/createCategory', createCategory);
+router.post('/createCategory', authMiddleware, createCategory);
 router.get('/getAllCategories', getAllCategories);
-router.patch('/updateCategory/:id', updateCategory);
+router.patch('/updateCategory/:id', authMiddleware, updateCategory);
 router.delete('/deleteCategory/:id', authMiddleware, deleteCategory);
 
 
